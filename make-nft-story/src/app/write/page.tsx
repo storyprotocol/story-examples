@@ -38,8 +38,6 @@ import {
 export default function Home() {
   const saveableCanvas = useRef<CanvasDraw | null>(null);
   const [prompt, setPrompt] = useState<string>();
-  const imageUrl =
-    "https://cloudflare-ipfs.com/ipfs/bafybeig6jszrofr372bt5lbkms2jp25vqjfajd36w5ju2pvke2kyw5jlpe/steamboat-willie-whistle.png";
 
   const [imageBase64, setImageBase64] = useState<string>();
   const [editedDataURLs, setEditedDataURLs] = useState<string[]>([]);
@@ -92,17 +90,17 @@ export default function Home() {
 
   // Fetch image and convert to base64
   useEffect(() => {
-    if (!imageUrl || imageBase64) return;
+    if (!mintedTokenImageURL || imageBase64) return;
     const fetchImage = async () => {
       try {
-        setImageBase64(await imageUrlToBase64(imageUrl));
+        setImageBase64(await imageUrlToBase64(mintedTokenImageURL));
       } catch (error) {
         setImageBase64(undefined);
         console.error(error);
       }
     };
     fetchImage();
-  }, [imageBase64, imageUrl]);
+  }, [imageBase64, mintedTokenImageURL]);
 
   return (
     <Stack direction="column" spacing={4} alignItems="center">
@@ -116,7 +114,7 @@ export default function Home() {
         </Text>
       )}
       <section>
-        {mintedTokenImageURL ? (
+        {tokenId && mintedTokenImageURL ? (
           <>
             <Box className="border-4 border-teal-500 rounded-sm overflow-hidden">
               <CanvasDraw
@@ -124,7 +122,7 @@ export default function Home() {
                   (saveableCanvas.current = canvasDraw)
                 }
                 brushColor="rgba(255,255,255,1)"
-                imgSrc={imageUrl}
+                imgSrc={mintedTokenImageURL}
                 hideGrid
                 canvasWidth={IMAGE_WIDTH}
                 canvasHeight={IMAGE_HEIGHT}

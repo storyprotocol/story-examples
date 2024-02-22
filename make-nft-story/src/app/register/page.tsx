@@ -10,10 +10,10 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useRegisterRootIp } from "@story-protocol/react";
-import NextLink from "next/link";
 import { useCallback, useState } from "react";
-import { stringToHex } from "viem";
+import { Hex, stringToHex } from "viem";
 
+import { TransactionHash } from "@/components/TransactionHash";
 import { MOCK_NFT_ADDRESS } from "@/constants";
 
 const policyId = BigInt(1);
@@ -27,9 +27,7 @@ export default function RegisterPage() {
 
   const [tokenId, setTokenId] = useState<string>();
   const [isRegisteringIp, setIsRegisteringIp] = useState(false);
-  const [registerIpTxHash, setRegisterIpTxHash] = useState<
-    string | undefined
-  >();
+  const [registerIpTxHash, setRegisterIpTxHash] = useState<Hex>();
 
   const handleRegisterIp = useCallback(async () => {
     if (!tokenId || isRegisteringIp) return;
@@ -97,20 +95,7 @@ export default function RegisterPage() {
           : "Register IP"}
       </Button>
       <section>
-        {registerIpTxHash && (
-          <Stack direction="column" spacing={2} mt={10} alignItems="center">
-            <Text>Transaction hash: {registerIpTxHash}</Text>
-            <NextLink
-              href={`https://sepolia.etherscan.io/tx/${registerIpTxHash}`}
-              passHref
-              target="_blank"
-            >
-              <Button as="a" colorScheme="blue" variant="outline">
-                View on Etherscan
-              </Button>
-            </NextLink>
-          </Stack>
-        )}
+        <TransactionHash txHash={registerIpTxHash} />
       </section>
     </Stack>
   );

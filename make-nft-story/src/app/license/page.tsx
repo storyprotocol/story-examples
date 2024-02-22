@@ -7,8 +7,8 @@ import {
 } from "@story-protocol/react";
 import Image from "next/image";
 import NextLink from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Hex, decodeEventLog } from "viem";
+import { useCallback, useMemo, useState } from "react";
+import { Hex } from "viem";
 import {
   useAccount,
   useChainId,
@@ -16,13 +16,14 @@ import {
   useWaitForTransactionReceipt,
 } from "wagmi";
 
+import { TransactionHash } from "@/components/TransactionHash";
 import {
-  licensingModuleABI,
   mockERC721ABI,
   LICENSE_REGISTRY_ADDRESS,
   MOCK_NFT_ADDRESS,
 } from "@/constants";
 import { encodeInitParamsToHex, getImageURLFromMetadata } from "@/utils";
+import { ViewNFT } from "@/components/ViewNFT";
 
 const policyId = BigInt(1);
 
@@ -149,34 +150,8 @@ export default function LicensePage() {
           : "Get License NFT"}
       </Button>
       <section>
-        {mintTxHash && (
-          <Stack direction="column" spacing={2} mt={10} alignItems="center">
-            <Text>Transaction hash: {mintTxHash}</Text>
-            <NextLink
-              href={`https://sepolia.etherscan.io/tx/${mintTxHash}`}
-              passHref
-              target="_blank"
-            >
-              <Button as="a" colorScheme="blue" variant="outline">
-                View on Etherscan
-              </Button>
-            </NextLink>
-          </Stack>
-        )}
-        {licenseTokenId && (
-          <Stack direction="column" spacing={2} mt={6} alignItems="center">
-            <Text>Minted NFT tokenId: {licenseTokenId}</Text>
-            <NextLink
-              href={`https://testnets.opensea.io/assets/sepolia/${LICENSE_REGISTRY_ADDRESS}/${licenseTokenId}`}
-              passHref
-              target="_blank"
-            >
-              <Button as="a" colorScheme="blue" variant="outline">
-                View on OpenSea
-              </Button>
-            </NextLink>
-          </Stack>
-        )}
+        <TransactionHash txHash={mintTxHash} />
+        <ViewNFT tokenId={licenseTokenId} />
         {tokenId && licensorIpId && tokenImageURL && (
           <Stack direction="column" spacing={3} mt={6} alignItems="center">
             <Heading>IP image</Heading>

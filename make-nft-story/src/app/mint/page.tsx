@@ -12,8 +12,10 @@ import {
 } from "wagmi";
 import { Hex, decodeEventLog } from "viem";
 
+import { TransactionHash } from "@/components/TransactionHash";
 import { mockERC721ABI, MOCK_NFT_ADDRESS } from "@/constants";
 import { getImageURLFromMetadata } from "@/utils";
+import { ViewNFT } from "@/components/ViewNFT";
 
 export default function MintPage() {
   const { address } = useAccount();
@@ -114,34 +116,8 @@ export default function MintPage() {
           : "Mint a test NFT"}
       </Button>
       <section>
-        {mintTxHash && (
-          <Stack direction="column" spacing={2} mt={10} alignItems="center">
-            <Text>Minting transaction hash: {mintTxHash}</Text>
-            <NextLink
-              href={`https://sepolia.etherscan.io/tx/${mintTxHash}`}
-              passHref
-              target="_blank"
-            >
-              <Button as="a" colorScheme="blue" variant="outline">
-                View on Etherscan
-              </Button>
-            </NextLink>
-          </Stack>
-        )}
-        {mintTxHash && mintedTokenId && (
-          <Stack direction="column" spacing={2} mt={6} alignItems="center">
-            <Text>Minted NFT tokenId: {mintedTokenId}</Text>
-            <NextLink
-              href={`https://testnets.opensea.io/assets/sepolia/${MOCK_NFT_ADDRESS}/${mintedTokenId}`}
-              passHref
-              target="_blank"
-            >
-              <Button as="a" colorScheme="blue" variant="outline">
-                View on OpenSea
-              </Button>
-            </NextLink>
-          </Stack>
-        )}
+        <TransactionHash txHash={mintTxHash} />
+        <ViewNFT tokenId={mintedTokenId} />
         {mintTxHash && mintedTokenImageURL && (
           <Stack direction="column" spacing={4} mt={6} alignItems="center">
             <Heading>Minted NFT image</Heading>
