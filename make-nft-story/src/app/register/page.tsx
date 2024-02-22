@@ -60,13 +60,14 @@ export default function RegisterPage() {
       textAlign="center"
     >
       <Heading>Register your NFT as an IP</Heading>
+      <Text fontWeight="bold">Make your IP programmable!</Text>
       <Text>
         Make sure your wallet owns the NFT token ID. If not, mint a new one in
         the Mint tab.
       </Text>
       <FormControl isDisabled={true} mt={4}>
         <FormLabel textAlign="center">NFT Address (Mock)</FormLabel>
-        <Input value={MOCK_NFT_ADDRESS} size="md" w="sm" />
+        <Input value={MOCK_NFT_ADDRESS} size="md" w="lg" />
       </FormControl>
       <FormControl isDisabled={isPending || isRegisteringIp}>
         <FormLabel textAlign="center">Your NFT token ID</FormLabel>
@@ -78,7 +79,7 @@ export default function RegisterPage() {
           }}
           placeholder="Token ID"
           size="md"
-          w="sm"
+          w="lg"
         />
       </FormControl>
       <Button
@@ -86,7 +87,7 @@ export default function RegisterPage() {
         variant="solid"
         onClick={() => handleRegisterIp()}
         isDisabled={isPending || isRegisteringIp}
-        w="sm"
+        w="lg"
       >
         {isPending
           ? "Pending..."

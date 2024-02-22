@@ -10,8 +10,9 @@ export function TransactionHash(props: TransactionHash) {
   if (!props.txHash) return <></>;
 
   return (
-    <Stack direction="column" spacing={2} mt={10} alignItems="center">
-      <Text>Transaction hash: {props.txHash}</Text>
+    <Stack direction="column" spacing={2} mt={10} alignItems="center" textAlign="center">
+      <Text>Transaction hash</Text>
+			<Text>{props.txHash}</Text>
       <NextLink
         href={`https://sepolia.etherscan.io/tx/${props.txHash}`}
         passHref

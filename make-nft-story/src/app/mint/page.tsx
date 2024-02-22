@@ -1,6 +1,15 @@
 "use client";
 
-import { Button, Heading, Input, Stack, Text } from "@chakra-ui/react";
+import {
+  Button,
+  ButtonGroup,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import Image from "next/image";
 import NextLink from "next/link";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -13,7 +22,11 @@ import {
 import { Hex, decodeEventLog } from "viem";
 
 import { TransactionHash } from "@/components/TransactionHash";
-import { mockERC721ABI, MOCK_NFT_ADDRESS } from "@/constants";
+import {
+  mockERC721ABI,
+  MOCK_NFT_ADDRESS,
+  LICENSE_REGISTRY_ADDRESS,
+} from "@/constants";
 import { getImageURLFromMetadata } from "@/utils";
 import { ViewNFT } from "@/components/ViewNFT";
 
@@ -93,15 +106,22 @@ export default function MintPage() {
       <Text>
         Mint an NFT with Steamboat Willie image or your custom image (URL)
       </Text>
-      <Input
-        value={nftUri}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setNftUri(e.target.value)
-        }
-        placeholder="Custom Image URL"
-        size="md"
-        w="lg"
-      />
+      <FormControl isDisabled={true}>
+        <FormLabel textAlign="center">NFT Address (Mock)</FormLabel>
+        <Input value={MOCK_NFT_ADDRESS} size="md" w="sm" />
+      </FormControl>
+      <FormControl isDisabled={isPending || isMinting}>
+        <FormLabel textAlign="center">Custom Image URL</FormLabel>
+        <Input
+          value={nftUri}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setNftUri(e.target.value)
+          }
+          placeholder="Leave empty for Steamboat Willie"
+          size="md"
+          w="lg"
+        />
+      </FormControl>
       <Button
         colorScheme="blue"
         variant="solid"
@@ -120,16 +140,27 @@ export default function MintPage() {
         <ViewNFT tokenId={mintedTokenId} />
         {mintTxHash && mintedTokenImageURL && (
           <Stack direction="column" spacing={4} mt={6} alignItems="center">
-            <Heading>Minted NFT image</Heading>
-            <NextLink
-              href={mintedTokenImageURL as string}
-              passHref
-              target="_blank"
-            >
-              <Button as="a" colorScheme="blue" variant="outline">
-                View Externally
-              </Button>
-            </NextLink>
+            <Heading>Minted NFT Image</Heading>
+            <ButtonGroup spacing={3}>
+              <NextLink
+                href={`https://testnets.opensea.io/assets/sepolia/${LICENSE_REGISTRY_ADDRESS}/${mintedTokenId}`}
+                passHref
+                target="_blank"
+              >
+                <Button as="a" colorScheme="blue" variant="outline">
+                  View on OpenSea
+                </Button>
+              </NextLink>
+              <NextLink
+                href={mintedTokenImageURL as string}
+                passHref
+                target="_blank"
+              >
+                <Button as="a" colorScheme="blue" variant="outline">
+                  View Externally
+                </Button>
+              </NextLink>
+            </ButtonGroup>
             <Image
               src={mintedTokenImageURL as string}
               alt="Minted NFT"
