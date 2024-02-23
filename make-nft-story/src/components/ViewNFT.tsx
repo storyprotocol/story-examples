@@ -1,7 +1,7 @@
 import { Button, Stack, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
 
-import { LICENSE_REGISTRY_ADDRESS } from "@/constants";
+import { MOCK_NFT_ADDRESS } from "@/constants";
 
 export type ViewNFTProps = {
   tokenId?: string;
@@ -14,7 +14,7 @@ export function ViewNFT(props: ViewNFTProps) {
     <Stack direction="column" spacing={2} mt={6} alignItems="center">
       <Text fontWeight="bold">View NFT Token ID {props.tokenId}</Text>
       <NextLink
-        href={`https://testnets.opensea.io/assets/sepolia/${LICENSE_REGISTRY_ADDRESS}/${props.tokenId}`}
+        href={`https://testnets.opensea.io/assets/sepolia/${MOCK_NFT_ADDRESS}/${props.tokenId}`}
         passHref
         target="_blank"
       >
