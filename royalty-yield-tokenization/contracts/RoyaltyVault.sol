@@ -14,8 +14,6 @@ import { RoyaltyToken } from "./RoyaltyToken.sol";
 /// @title Royalty Vault
 /// @notice This contract is 4626 vault for Royalty Tokens
 contract RoyaltyVault is ERC4626, Ownable2Step {
-	error RoyaltyVault__AaveWithdrawalNotReady();
-
 	/// @notice Story Protocol's Royalty Policy LAP contract
 	IRoyaltyPolicyLAP public ROYALTY_POLICY_LAP;
 
@@ -23,7 +21,7 @@ contract RoyaltyVault is ERC4626, Ownable2Step {
 	IERC1155 public ROYALTY_NFT;
 
 	/// @notice The associated ERC20 token for the vault that represents each ERC-1155 Royalty NFT.
-	IERC20 public ROYALTY_TOKEN;
+	RoyaltyToken public ROYALTY_UND_TOKEN;
 
 	/// @notice Aave pool address
 	IPool public AAVE_POOL;
@@ -38,7 +36,7 @@ contract RoyaltyVault is ERC4626, Ownable2Step {
 	uint256 public aaveWithdrawalInterval;
 
 	constructor(address royaltyPolicyLAP, address royaltyNft, address aavePoolAddressProvider)
-		ERC4626(_createRoyaltyToken())
+		ERC4626(_createRoyaltyUnderlyingToken())
 		ERC20("Royalty Vault Token", "RVT")
 		Ownable(msg.sender)
 	{
@@ -57,21 +55,31 @@ contract RoyaltyVault is ERC4626, Ownable2Step {
 		_;
 	}
 
+	/// @dev Deposit Royalty NFTs to the vault and mint the corresponding Royalty Vault Tokens.
 	function depositRNFT(uint256 amount) public {
+		// Transfer `amount` of Royalty NFTs from the sender to the vault, mint the corresponding Royalty Und Tokens
 		ROYALTY_NFT.safeTransferFrom(msg.sender, address(this), 0, amount, "");
-		_mint(msg.sender, amount);
+		ROYALTY_UND_TOKEN.mint(msg.sender, amount);
+
+		// Then deposit the minted Royalty Und Tokens to the vault
+		deposit(amount, msg.sender);
 	}
 
+	/// @dev Withdraw Royalty NFTs from the vault and burn the corresponding Royalty Vault Tokens.
 	function withdrawRNFT(uint256 amount) public {
 		require(balanceOf(msg.sender) >= amount, "RoyaltyVault: insufficient balance");
-		_burn(msg.sender, amount);
+		// Transfer the Royalty Und Tokens from the vault to the sender, then burn the withdrawn Royalty Und Tokens
+		withdraw(amount, msg.sender);
+		ROYALTY_UND_TOKEN.burn(msg.sender, amount);
+
+		// Then withdraw `amount` of Royalty NFTs from the vault to the sender
 		ROYALTY_NFT.safeTransferFrom(address(this), msg.sender, 0, amount, "");
 	}
 
 	/// @dev Create a new ERC20 token for the vault that represents each ERC-1155 Royalty NFT.
-	function _createRoyaltyToken() internal returns (IERC20) {
-		ROYALTY_TOKEN = new RoyaltyToken(address(this));
-		return IERC20(ROYALTY_TOKEN);
+	function _createRoyaltyUnderlyingToken() internal returns (IERC20) {
+		ROYALTY_UND_TOKEN = new RoyaltyToken(address(this));
+		return RoyaltyToken(ROYALTY_UND_TOKEN);
 	}
 
 	//
