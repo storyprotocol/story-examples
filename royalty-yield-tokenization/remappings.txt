@@ -1,0 +1,7 @@
+ds-test/=node_modules/ds-test/src/
+forge-std/=node_modules/forge-std/src/
+@aave/core-v3/=node_modules/@aave/core-v3/contracts/
+@openzeppelin/contracts/=node_modules/@openzeppelin/contracts/
+@story-protocol/core/=node_modules/@story-protocol/core/contracts/
+@story-protocol/periphery/=node_modules/@story-protocol/periphery/contracts/
+erc6551/=node_modules/erc6551/

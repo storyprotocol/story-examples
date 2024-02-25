@@ -1,0 +1,27 @@
+{
+  "name": "royalty-yield-tokenization",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "npx hardhat test"
+  },
+  "author": "StoryProtocol",
+  "license": "MIT",
+  "devDependencies": {
+    "ds-test": "https://github.com/dapphub/ds-test",
+    "forge-std": "github:foundry-rs/forge-std#v1.7.6",
+    "solhint": "^3.4.1"
+  },
+  "dependencies": {
+    "@aave/core-v3": "^1.18.0",
+    "@openzeppelin/contracts": "5.0.1",
+    "@openzeppelin/contracts-upgradeable": "5.0.1",
+    "@storyprotocol/core": "https://github.com/storyprotocol/protocol-core#beta-rc5",
+    "erc6551": "^0.3.1"
+  }
+}
