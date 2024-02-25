@@ -1,4 +1,4 @@
-# Royalty Yield Tokenization
+# Royalty Yield Vault
 
 Story Protocol provides a royalty policy for the Royalty Module called "Royalty Policy LAP," which uses 0xSplits for royalty payments.
 
