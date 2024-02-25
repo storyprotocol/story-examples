@@ -7,6 +7,7 @@ import { Ownable, Ownable2Step } from "@openzeppelin/contracts/access/Ownable2St
 import { ERC20, IERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import { IERC1155 } from "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import { ERC4626 } from "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol";
+import { IRoyaltyPolicyLAP } from "@storyprotocol/core/interfaces/modules/royalty/policies/IRoyaltyPolicyLAP.sol";
 
 import { RoyaltyToken } from "./RoyaltyToken.sol";
 
@@ -15,8 +16,8 @@ import { RoyaltyToken } from "./RoyaltyToken.sol";
 contract RoyaltyVault is ERC4626, Ownable2Step {
 	error RoyaltyVault__AaveWithdrawalNotReady();
 
-	/// @notice List of allowed tokens for vault strategies
-	mapping(address => bool) public whitelistedTokens;
+	/// @notice Story Protocol's Royalty Policy LAP contract
+	IRoyaltyPolicyLAP public ROYALTY_POLICY_LAP;
 
 	/// @notice The associated 0xSplits LS1155 Royalty NFT contract
 	IERC1155 public ROYALTY_NFT;
@@ -27,17 +28,21 @@ contract RoyaltyVault is ERC4626, Ownable2Step {
 	/// @notice Aave pool address
 	IPool public AAVE_POOL;
 
+	/// @notice List of allowed tokens for vault strategies
+	mapping(address => bool) public whitelistedTokens;
+
 	/// @notice Last time Aave withdrawal was made
 	uint256 public lastAaveWithdrawal;
 
 	/// @notice Enforced internval between permissionless Aave withdrawals
 	uint256 public aaveWithdrawalInterval;
 
-	constructor(address royaltyNft, address aavePoolAddressProvider)
+	constructor(address royaltyPolicyLAP, address royaltyNft, address aavePoolAddressProvider)
 		ERC4626(_createRoyaltyToken())
 		ERC20("Royalty Vault Token", "RVT")
 		Ownable(msg.sender)
 	{
+		ROYALTY_POLICY_LAP = IRoyaltyPolicyLAP(royaltyPolicyLAP);
 		ROYALTY_NFT = IERC1155(royaltyNft);
 		AAVE_POOL = IPool(IPoolAddressesProvider(aavePoolAddressProvider).getPool());
 	}
@@ -73,14 +78,26 @@ contract RoyaltyVault is ERC4626, Ownable2Step {
 	// Owner functions
 	//
 
+	/// @notice Whitelist a token for vault strategies
 	function whitelistToken(address token, bool status) public onlyOwner {
 		whitelistedTokens[token] = status;
 	}
 
+	/// @notice Set the interval between permissionless Aave withdrawals
 	function setAaveWithdrawalInterval(uint256 interval) public onlyOwner {
 		// change so that the max interval is 7 days and the min interval is 1 day
 		require(interval >= 1 days && interval <= 7 days, "RoyaltyVault: invalid interval");
 		aaveWithdrawalInterval = interval;
+	}
+
+	//
+	// Interaction with Story Protocol Royalty Policy LAP
+	//
+
+	/// @notice Claim Royalty payments from the Royalty Policy LAP for given claimer IP Account. This should disburse the
+	/// royalty payment to this contract, which should hold RNFTs from the claimer IP Account.
+	function claimRoyaltyFunds(address claimerIpAccount, uint256 withdrawETH, ERC20[] memory tokens) public {
+		ROYALTY_POLICY_LAP.claimFromIpPool(claimerIpAccount, withdrawETH, tokens);
 	}
 
 	//
