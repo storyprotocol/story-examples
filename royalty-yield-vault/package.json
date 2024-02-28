@@ -21,7 +21,7 @@
     "@aave/core-v3": "^1.18.0",
     "@openzeppelin/contracts": "5.0.1",
     "@openzeppelin/contracts-upgradeable": "5.0.1",
-    "@storyprotocol/core": "https://github.com/storyprotocol/protocol-core#beta",
+    "@storyprotocol/core": "https://github.com/storyprotocol/protocol-core#v1.0.0-beta",
     "erc6551": "^0.3.1"
   }
 }
