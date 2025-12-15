@@ -14,20 +14,20 @@
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@rainbow-me/rainbowkit": "^2.0.0",
-    "@story-protocol/react": "0.0.1-beta.4",
+    "@story-protocol/react": "0.0.1-beta.6",
     "@tanstack/query-sync-storage-persister": "^5.22.2",
     "@tanstack/react-query": "^5.22.2",
     "@tanstack/react-query-persist-client": "^5.22.2",
     "connectkit": "^1.7.1",
     "framer-motion": "^11.0.5",
     "image-js": "^0.35.5",
-    "next": "14.1.0",
+    "next": "14.2.35",
     "openai": "^4.28.0",
     "pngjs": "^7.0.0",
     "react": "^18",
     "react-canvas-draw": "^1.2.1",
     "react-dom": "^18",
-    "wagmi": "^2.5.7"
+    "wagmi": "2.17.1"
   },
   "devDependencies": {
     "@types/node": "^20",
